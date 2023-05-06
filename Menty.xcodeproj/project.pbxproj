@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		85FEC3362A0621DB0068A787 /* MentyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85FEC3352A0621DB0068A787 /* MentyApp.swift */; };
-		85FEC3382A0621DB0068A787 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85FEC3372A0621DB0068A787 /* ContentView.swift */; };
 		85FEC33A2A0621DC0068A787 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 85FEC3392A0621DC0068A787 /* Assets.xcassets */; };
 		85FEC33D2A0621DC0068A787 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 85FEC33C2A0621DC0068A787 /* Preview Assets.xcassets */; };
 		85FEC3472A0621DC0068A787 /* MentyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85FEC3462A0621DC0068A787 /* MentyTests.swift */; };
@@ -36,7 +35,6 @@
 /* Begin PBXFileReference section */
 		85FEC3322A0621DB0068A787 /* Menty.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Menty.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		85FEC3352A0621DB0068A787 /* MentyApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MentyApp.swift; sourceTree = "<group>"; };
-		85FEC3372A0621DB0068A787 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		85FEC3392A0621DC0068A787 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		85FEC33C2A0621DC0068A787 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		85FEC3422A0621DC0068A787 /* MentyTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MentyTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -95,7 +93,6 @@
 			isa = PBXGroup;
 			children = (
 				85FEC3352A0621DB0068A787 /* MentyApp.swift */,
-				85FEC3372A0621DB0068A787 /* ContentView.swift */,
 				85FEC3392A0621DC0068A787 /* Assets.xcassets */,
 				85FEC33B2A0621DC0068A787 /* Preview Content */,
 			);
@@ -257,7 +254,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				85FEC3382A0621DB0068A787 /* ContentView.swift in Sources */,
 				85FEC3362A0621DB0068A787 /* MentyApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
