@@ -1,6 +1,4 @@
 import SwiftUI
-import UserNotifications
-import Foundation
 
 struct RemindersView: View {
     @State private var reminders: [String] = []
@@ -46,36 +44,41 @@ struct RemindersView: View {
             
             List {
                 ForEach(reminders.indices, id: \.self) { index in
+                    let reminder = reminders[index]
+                    let components = reminder.components(separatedBy: " - ")
+                    let title = components[0]
+                    
                     Button(action: {
                         showEditReminderView(for: index)
                     }) {
-                        Text(reminders[index])
+                        VStack(alignment: .leading) {
+                                        Text(title)
+                                            .font(.headline)
+                                            .foregroundColor(.black) // Set title text color to black
+                                        
+                                        Text(formattedSelectedDate)
+                                            .font(.subheadline)
+                                            .foregroundColor(.blue) // Set date text color to blue
+                                    }
                     }
                 }
                 .onDelete(perform: deleteReminder)
             }
         }
         .sheet(isPresented: $showEditReminder) {
-            EditReminder(reminder: $reminders[editReminderIndex], selectedDate: $selectedDate,
-                isPresented: $showEditReminder)
+            EditReminder(reminder: $reminders[editReminderIndex], selectedDate: $selectedDate, isPresented: $showEditReminder)
         }
     }
     
     private func showEditReminderView(for index: Int) {
-            editReminderIndex = index
-            showEditReminder = true
-        }
+        editReminderIndex = index
+        showEditReminder = true
+    }
     
     private func addReminder() {
         guard !newReminder.isEmpty else { return }
         
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateStyle = .medium
-        dateFormatter.timeStyle = .short
-        
-        let formattedDate = dateFormatter.string(from: selectedDate)
-        
-        let reminder = "\(newReminder) - \(formattedDate)"
+        let reminder = "\(newReminder)"
         reminders.append(reminder)
         newReminder = ""
         showDatePicker = false
@@ -86,5 +89,4 @@ struct RemindersView: View {
     private func deleteReminder(at offsets: IndexSet) {
         reminders.remove(atOffsets: offsets)
     }
-    
 }

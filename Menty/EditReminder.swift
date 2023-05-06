@@ -10,7 +10,7 @@ struct EditReminder: View {
     init(reminder: Binding<String>, selectedDate: Binding<Date>, isPresented: Binding<Bool>) {
         _reminder = reminder
         _selectedDate = selectedDate
-        _editedTitle = State(initialValue: "")
+        _editedTitle = State(initialValue: reminder.wrappedValue)
         _editedDate = State(initialValue: selectedDate.wrappedValue)
         _isPresented = isPresented
     }
@@ -40,7 +40,7 @@ struct EditReminder: View {
         
         let formattedDate = dateFormatter.string(from: editedDate)
         
-        reminder = "\(editedTitle) - \(formattedDate)"
+        reminder = "\(editedTitle)"
         selectedDate = editedDate
         
         isPresented = false // Dismiss the view
