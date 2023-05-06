@@ -31,16 +31,14 @@ struct EditReminder: View {
             }
             .padding()
         }
+        .onAppear {
+            editedTitle = reminder
+            editedDate = selectedDate
+        }
     }
     
     private func saveReminder() {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateStyle = .medium
-        dateFormatter.timeStyle = .short
-        
-        let formattedDate = dateFormatter.string(from: editedDate)
-        
-        reminder = "\(editedTitle)"
+        reminder = editedTitle
         selectedDate = editedDate
         
         isPresented = false // Dismiss the view
