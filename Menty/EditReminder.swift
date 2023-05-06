@@ -1,16 +1,16 @@
 import SwiftUI
 
 struct EditReminder: View {
-    @Binding var reminder: String
+    @Binding var reminder: Reminder
     @Binding var selectedDate: Date
     @State private var editedTitle: String
     @State private var editedDate: Date
     @Binding var isPresented: Bool
     
-    init(reminder: Binding<String>, selectedDate: Binding<Date>, isPresented: Binding<Bool>) {
+    init(reminder: Binding<Reminder>, selectedDate: Binding<Date>, isPresented: Binding<Bool>) {
         _reminder = reminder
         _selectedDate = selectedDate
-        _editedTitle = State(initialValue: reminder.wrappedValue)
+        _editedTitle = State(initialValue: reminder.wrappedValue.title)
         _editedDate = State(initialValue: selectedDate.wrappedValue)
         _isPresented = isPresented
     }
@@ -32,13 +32,13 @@ struct EditReminder: View {
             .padding()
         }
         .onAppear {
-            editedTitle = reminder
+            editedTitle = reminder.title
             editedDate = selectedDate
         }
     }
     
     private func saveReminder() {
-        reminder = editedTitle
+        reminder.title = editedTitle
         selectedDate = editedDate
         
         isPresented = false // Dismiss the view

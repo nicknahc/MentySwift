@@ -1,8 +1,14 @@
 import SwiftUI
 
+struct Reminder: Identifiable {
+    let id = UUID()
+    var title: String
+    var formattedDate: String
+}
+
 struct RemindersView: View {
     @Environment(\.colorScheme) var colorScheme
-    @State private var reminders: [String] = []
+    @State private var reminders: [Reminder] = []
     @State private var newReminder: String = ""
     @State private var selectedDate = Date()
     @State private var showDatePicker = false
@@ -26,20 +32,16 @@ struct RemindersView: View {
             Color(UIColor.systemBackground).edgesIgnoringSafeArea(.all)
             VStack {
                 List {
-                    ForEach(reminders.indices, id: \.self) { index in
-                        let reminder = reminders[index]
-                        let components = reminder.components(separatedBy: " - ")
-                        let title = components[0]
-                        
+                    ForEach(reminders) { reminder in
                         Button(action: {
-                            showEditReminderView(for: index)
+                            showEditReminderView(for: reminder)
                         }) {
                             VStack(alignment: .leading) {
-                                Text(title)
+                                Text(reminder.title)
                                     .font(.headline)
                                     .foregroundColor(titleTextColor)
                                 
-                                Text(formattedSelectedDate)
+                                Text(reminder.formattedDate)
                                     .font(.subheadline)
                                     .foregroundColor(.blue)
                             }
@@ -93,20 +95,22 @@ struct RemindersView: View {
         }
     }
     
-    private func showEditReminderView(for index: Int) {
-        editReminderIndex = index
-        showEditReminder = true
+    private func showEditReminderView(for reminder: Reminder) {
+        if let index = reminders.firstIndex(where: { $0.id == reminder.id }) {
+            editReminderIndex = index
+            showEditReminder = true
+        }
     }
     
     private func addReminder() {
         guard !newReminder.isEmpty else { return }
         
-        let reminder = "\(newReminder) - \(formattedSelectedDate)"
+        let reminder = Reminder(title: newReminder, formattedDate: formattedSelectedDate)
         reminders.append(reminder)
         newReminder = ""
         showDatePicker = false
         
-        NotificationManager.scheduleNotification(for: reminder, at: selectedDate)
+        NotificationManager.scheduleNotification(for: "\(reminder.title) - \(reminder.formattedDate)", at: selectedDate)
     }
     
     private func deleteReminder(at offsets: IndexSet) {
