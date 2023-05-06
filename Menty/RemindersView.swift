@@ -31,22 +31,30 @@ struct RemindersView: View {
             VStack {
                 List {
                     ForEach(reminders) { reminder in
-                        Button(action: {
-                            showEditReminderView(for: reminder)
-                        }) {
-                            VStack(alignment: .leading) {
-                                Text(reminder.title)
-                                    .font(.headline)
-                                    .foregroundColor(titleTextColor)
-                                
-                                Text(formatDate(reminder.date))
-                                    .font(.subheadline)
-                                    .foregroundColor(.blue)
+                        VStack(alignment: .leading) {
+                            Text(reminder.title)
+                                .font(.headline)
+                                .foregroundColor(titleTextColor)
+                            
+                            Text(formatDate(reminder.date))
+                                .font(.subheadline)
+                                .foregroundColor(.blue)
+                        }
+                        .onTapGesture {
+                                    showEditReminderView(for: reminder)
+                                }
+                        .swipeActions {
+                            Button(action: {
+                                deleteReminder(reminder)
+                            }) {
+                                Image(systemName: "trash")
                             }
+                            .tint(.red)
                         }
                     }
-                    .onDelete(perform: deleteReminder)
                 }
+
+
                 
                 Spacer()
                 
@@ -111,9 +119,16 @@ struct RemindersView: View {
         NotificationManager.scheduleNotification(for: "\(reminder.title) - \(formatDate(reminder.date))", at: selectedDate)
     }
     
-    private func deleteReminder(at offsets: IndexSet) {
-        reminders.remove(atOffsets: offsets)
+    private func deleteReminder(_ reminder: Reminder) {
+        if let index = reminders.firstIndex(where: { $0.id == reminder.id }) {
+            let deletedReminder = reminders[index]
+            NotificationManager.cancelNotification(withIdentifier: deletedReminder.id.uuidString)
+            reminders.remove(at: index)
+        }
     }
+
+
+
     
     private func formatDate(_ date: Date) -> String {
             let dateFormatter = DateFormatter()

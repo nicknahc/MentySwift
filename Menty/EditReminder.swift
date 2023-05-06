@@ -1,4 +1,5 @@
 import SwiftUI
+import UserNotifications
 
 struct EditReminder: View {
     @Binding var reminder: Reminder
@@ -42,5 +43,15 @@ struct EditReminder: View {
         reminder.date = editedDate
         
         isPresented = false // Dismiss the view
+        
+        let notificationTitle = "\(reminder.title) - \(formatDate(reminder.date))"
+        NotificationManager.scheduleNotification(for: notificationTitle, at: reminder.date)
+    }
+    
+    private func formatDate(_ date: Date) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .medium
+        dateFormatter.timeStyle = .short
+        return dateFormatter.string(from: date)
     }
 }

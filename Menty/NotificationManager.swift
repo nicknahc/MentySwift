@@ -26,4 +26,8 @@ public class NotificationManager {
             }
         }
     }
+    
+    public static func cancelNotification(withIdentifier identifier: String) {
+            UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [identifier])
+        }
 }
