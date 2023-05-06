@@ -1,11 +1,14 @@
 import SwiftUI
 import UserNotifications
+import Foundation
 
 struct RemindersView: View {
     @State private var reminders: [String] = []
     @State private var newReminder: String = ""
     @State private var selectedDate = Date()
     @State private var showDatePicker = false
+    @State private var showEditReminder = false
+    @State private var editReminderIndex = 0
     
     private var formattedSelectedDate: String {
         let dateFormatter = DateFormatter()
@@ -42,15 +45,26 @@ struct RemindersView: View {
             }
             
             List {
-                ForEach(reminders, id: \.self) { reminder in
-                    Text(reminder)
+                ForEach(reminders.indices, id: \.self) { index in
+                    Button(action: {
+                        showEditReminderView(for: index)
+                    }) {
+                        Text(reminders[index])
+                    }
                 }
                 .onDelete(perform: deleteReminder)
             }
-            
-            
+        }
+        .sheet(isPresented: $showEditReminder) {
+            EditReminder(reminder: $reminders[editReminderIndex], selectedDate: $selectedDate,
+                isPresented: $showEditReminder)
         }
     }
+    
+    private func showEditReminderView(for index: Int) {
+            editReminderIndex = index
+            showEditReminder = true
+        }
     
     private func addReminder() {
         guard !newReminder.isEmpty else { return }
@@ -66,28 +80,11 @@ struct RemindersView: View {
         newReminder = ""
         showDatePicker = false
         
-        scheduleNotification(for: reminder, at: selectedDate)
+        NotificationManager.scheduleNotification(for: reminder, at: selectedDate)
     }
     
     private func deleteReminder(at offsets: IndexSet) {
         reminders.remove(atOffsets: offsets)
     }
     
-    private func scheduleNotification(for reminder: String, at date: Date) {
-        let content = UNMutableNotificationContent()
-        content.title = "Reminder"
-        content.body = reminder
-        content.sound = UNNotificationSound.default
-        
-        let dateComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: date)
-        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
-        
-        let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
-        
-        UNUserNotificationCenter.current().add(request) { error in
-            if let error = error {
-                print("Error scheduling notification: \(error.localizedDescription)")
-            }
-        }
-    }
 }
