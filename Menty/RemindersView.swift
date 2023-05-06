@@ -116,9 +116,9 @@ struct RemindersView: View {
         newReminder = ""
         showDatePicker = false
         
-        NotificationManager.scheduleNotification(for: "\(reminder.title) - \(formatDate(reminder.date))", at: selectedDate)
+        NotificationManager.scheduleNotification(for: "\(reminder.title) - \(formatDate(reminder.date))", at: selectedDate, withIdentifier: reminder.id.uuidString)
     }
-    
+
     private func deleteReminder(_ reminder: Reminder) {
         if let index = reminders.firstIndex(where: { $0.id == reminder.id }) {
             let deletedReminder = reminders[index]
@@ -126,6 +126,7 @@ struct RemindersView: View {
             reminders.remove(at: index)
         }
     }
+
 
 
 

@@ -45,8 +45,10 @@ struct EditReminder: View {
         isPresented = false // Dismiss the view
         
         let notificationTitle = "\(reminder.title) - \(formatDate(reminder.date))"
-        NotificationManager.scheduleNotification(for: notificationTitle, at: reminder.date)
+        NotificationManager.cancelNotification(withIdentifier: reminder.id.uuidString)
+        NotificationManager.scheduleNotification(for: notificationTitle, at: reminder.date, withIdentifier: reminder.id.uuidString)
     }
+
     
     private func formatDate(_ date: Date) -> String {
         let dateFormatter = DateFormatter()
