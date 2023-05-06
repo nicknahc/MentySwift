@@ -13,6 +13,11 @@
 		85FEC3472A0621DC0068A787 /* MentyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85FEC3462A0621DC0068A787 /* MentyTests.swift */; };
 		85FEC3512A0621DC0068A787 /* MentyUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85FEC3502A0621DC0068A787 /* MentyUITests.swift */; };
 		85FEC3532A0621DC0068A787 /* MentyUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85FEC3522A0621DC0068A787 /* MentyUITestsLaunchTests.swift */; };
+		85FEC3602A062CBB0068A787 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85FEC35F2A062CBB0068A787 /* AppDelegate.swift */; };
+		85FEC3622A062D860068A787 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85FEC3612A062D860068A787 /* ContentView.swift */; };
+		85FEC3642A062DB40068A787 /* RemindersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85FEC3632A062DB40068A787 /* RemindersView.swift */; };
+		85FEC3662A062DDF0068A787 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85FEC3652A062DDF0068A787 /* SettingsView.swift */; };
+		85FEC3682A062DF50068A787 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85FEC3672A062DF50068A787 /* ProfileView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,6 +47,11 @@
 		85FEC34C2A0621DC0068A787 /* MentyUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MentyUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		85FEC3502A0621DC0068A787 /* MentyUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MentyUITests.swift; sourceTree = "<group>"; };
 		85FEC3522A0621DC0068A787 /* MentyUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MentyUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		85FEC35F2A062CBB0068A787 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		85FEC3612A062D860068A787 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		85FEC3632A062DB40068A787 /* RemindersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemindersView.swift; sourceTree = "<group>"; };
+		85FEC3652A062DDF0068A787 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		85FEC3672A062DF50068A787 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -92,7 +102,12 @@
 		85FEC3342A0621DB0068A787 /* Menty */ = {
 			isa = PBXGroup;
 			children = (
+				85FEC35F2A062CBB0068A787 /* AppDelegate.swift */,
+				85FEC3652A062DDF0068A787 /* SettingsView.swift */,
+				85FEC3612A062D860068A787 /* ContentView.swift */,
+				85FEC3632A062DB40068A787 /* RemindersView.swift */,
 				85FEC3352A0621DB0068A787 /* MentyApp.swift */,
+				85FEC3672A062DF50068A787 /* ProfileView.swift */,
 				85FEC3392A0621DC0068A787 /* Assets.xcassets */,
 				85FEC33B2A0621DC0068A787 /* Preview Content */,
 			);
@@ -254,7 +269,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				85FEC3662A062DDF0068A787 /* SettingsView.swift in Sources */,
+				85FEC3602A062CBB0068A787 /* AppDelegate.swift in Sources */,
 				85FEC3362A0621DB0068A787 /* MentyApp.swift in Sources */,
+				85FEC3642A062DB40068A787 /* RemindersView.swift in Sources */,
+				85FEC3682A062DF50068A787 /* ProfileView.swift in Sources */,
+				85FEC3622A062D860068A787 /* ContentView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
