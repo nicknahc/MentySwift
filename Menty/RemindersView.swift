@@ -3,7 +3,12 @@ import SwiftUI
 struct Reminder: Identifiable {
     let id = UUID()
     var title: String
-    var formattedDate: String
+    var date: Date // New property to store the date
+    
+    init(title: String, date: Date) {
+        self.title = title
+        self.date = date
+    }
 }
 
 struct RemindersView: View {
@@ -15,13 +20,6 @@ struct RemindersView: View {
     @State private var showEditReminder = false
     @State private var editReminderIndex = 0
     @State private var showAddReminder = false
-    
-    private var formattedSelectedDate: String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateStyle = .medium
-        dateFormatter.timeStyle = .short
-        return dateFormatter.string(from: selectedDate)
-    }
     
     private var titleTextColor: Color {
         return colorScheme == .light ? .black : .white
@@ -41,7 +39,7 @@ struct RemindersView: View {
                                     .font(.headline)
                                     .foregroundColor(titleTextColor)
                                 
-                                Text(reminder.formattedDate)
+                                Text(formatDate(reminder.date))
                                     .font(.subheadline)
                                     .foregroundColor(.blue)
                             }
@@ -105,15 +103,22 @@ struct RemindersView: View {
     private func addReminder() {
         guard !newReminder.isEmpty else { return }
         
-        let reminder = Reminder(title: newReminder, formattedDate: formattedSelectedDate)
+        let reminder = Reminder(title: newReminder, date: selectedDate)
         reminders.append(reminder)
         newReminder = ""
         showDatePicker = false
         
-        NotificationManager.scheduleNotification(for: "\(reminder.title) - \(reminder.formattedDate)", at: selectedDate)
+        NotificationManager.scheduleNotification(for: "\(reminder.title) - \(formatDate(reminder.date))", at: selectedDate)
     }
     
     private func deleteReminder(at offsets: IndexSet) {
         reminders.remove(atOffsets: offsets)
     }
-}
+    
+    private func formatDate(_ date: Date) -> String {
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateStyle = .medium
+            dateFormatter.timeStyle = .short
+            return dateFormatter.string(from: date)
+        }
+    }

@@ -11,7 +11,7 @@ struct EditReminder: View {
         _reminder = reminder
         _selectedDate = selectedDate
         _editedTitle = State(initialValue: reminder.wrappedValue.title)
-        _editedDate = State(initialValue: selectedDate.wrappedValue)
+        _editedDate = State(initialValue: reminder.wrappedValue.date)
         _isPresented = isPresented
     }
     
@@ -39,7 +39,7 @@ struct EditReminder: View {
     
     private func saveReminder() {
         reminder.title = editedTitle
-        selectedDate = editedDate
+        reminder.date = editedDate
         
         isPresented = false // Dismiss the view
     }
