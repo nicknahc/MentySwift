@@ -24,8 +24,21 @@ struct EditReminder: View {
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .padding()
             
-            Toggle("Date", isOn: $isDateToggledOn) // Add the Toggle control
-                .padding(.horizontal)
+            HStack {
+                           Image(systemName: "calendar")
+                               .foregroundColor(.blue)
+                               .frame(width: 30, alignment: .leading) // Set a fixed width and alignment
+                               .padding(.leading)
+                           
+                           Text("Date")
+                               .font(.headline)
+                               .frame(width: 80, alignment: .leading)
+                           
+                           Spacer() // Add a spacer to push the toggle to the right
+                           
+                           Toggle("", isOn: $isDateToggledOn)
+                               .padding(.trailing)
+                       }
             
             if isDateToggledOn || reminder.date != nil { // Check the toggle state
                 let nonOptionalSelectedDate = Binding<Date>(
@@ -42,14 +55,24 @@ struct EditReminder: View {
                     }
                 )
                 
+                HStack {
+                    if let date = reminder.date {
+                        Text(formatDate(date))
+                            .foregroundColor(.secondary)
+                    }
+                    Spacer()
+                }
+                .padding(.horizontal)
+                
                 DatePicker("Select Date", selection: nonOptionalSelectedDate, in: Date()..., displayedComponents: [.date, .hourAndMinute])
                     .datePickerStyle(GraphicalDatePickerStyle())
                     .labelsHidden()
                     .padding()
                     .onAppear {
-                        editedDate = reminder.date ?? selectedDate
+                        editedDate = reminder.date ?? selectedDate ?? Date()
                     }
             }
+
             
             Button(action: saveReminder) {
                 Text("Save")

@@ -116,17 +116,18 @@ struct RemindersView: View {
                         Toggle("", isOn: $showDatePicker)
                             .padding(.trailing)
                     }
-                        
-                    if let date = selectedDate {
+                
+                    if let selectedDate = selectedDate {
                         HStack {
-                            Text(formatDate(date))
+                            Text(formatDate(selectedDate))
+                                .font(.headline)
                                 .foregroundColor(.secondary)
+                            
                             Spacer()
                         }
                         .padding(.horizontal)
                         .padding(.top, 8) // Add a top padding for spacing
                     }
-
 
                     if showDatePicker {
                         DatePicker("", selection: Binding<Date>(
@@ -140,16 +141,9 @@ struct RemindersView: View {
                             .labelsHidden()
                             .padding(.horizontal)
                             .padding(.bottom) // Add a bottom padding for spacing
+                        
                     }
-
-
-
-
-
-
                 }
-
-                
                 Button(action: {
                     showAddReminder.toggle()
                 }) {
