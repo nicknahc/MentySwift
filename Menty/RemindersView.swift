@@ -3,13 +3,16 @@ import SwiftUI
 struct Reminder: Identifiable {
     let id = UUID()
     var title: String
-    var date: Date? // New property to store the date
+    var date: Date?
+    var isEditable: Bool // New property to track the edit state
     
-    init(title: String, date: Date?) {
+    init(title: String, date: Date?, isEditable: Bool = false) {
         self.title = title
         self.date = date
+        self.isEditable = isEditable
     }
 }
+
 
 struct RemindersView: View {
     @Environment(\.colorScheme) var colorScheme
@@ -30,23 +33,35 @@ struct RemindersView: View {
             Color(UIColor.systemBackground).edgesIgnoringSafeArea(.all)
             VStack {
                 List {
-                    ForEach(reminders) { reminder in
-                        VStack(alignment: .leading) {
-                            Text(reminder.title)
-                                .font(.headline)
-                                .foregroundColor(titleTextColor)
-                            
-                            if let date = reminder.date {
-                                Text(formatDate(date))
-                                    .font(.subheadline)
-                                    .foregroundColor(.blue)
+                    ForEach(reminders.indices, id: \.self) { index in
+                        let reminder = reminders[index]
+                        HStack {
+                            if reminder.isEditable {
+                                TextField("Reminder", text: $reminders[index].title)
+                                    .font(.headline)
+                                    .foregroundColor(titleTextColor)
+                                    .onSubmit {
+                                        // Save the updated title when editing is complete
+                                        reminders[index].isEditable = false
+                                        saveReminder(reminders[index])
+                                    }
                             } else {
-                                EmptyView() // Hide the text when no date is selected
+                                Text(reminder.title)
+                                    .font(.headline)
+                                    .foregroundColor(titleTextColor)
+                                    .onTapGesture {
+                                        // Enable editing when the title is tapped
+                                        reminders[index].isEditable = true
+                                    }
                             }
-
-                        }
-                        .onTapGesture {
-                            showEditReminderView(for: reminder)
+                            
+                            Spacer()
+                            
+                            Image(systemName: "info.circle")
+                                .foregroundColor(.blue)
+                                .onTapGesture {
+                                    showEditReminderView(for: reminder)
+                                }
                         }
                         .swipeActions {
                             Button(action: {
@@ -57,6 +72,8 @@ struct RemindersView: View {
                             .tint(.red)
                         }
                     }
+
+
 
                 }
 
@@ -123,6 +140,14 @@ struct RemindersView: View {
             ), isPresented: $showEditReminder)
         }
     }
+    
+    private func saveReminder(_ reminder: Reminder) {
+        if let index = reminders.firstIndex(where: { $0.id == reminder.id }) {
+            reminders[index] = reminder
+            // Update any necessary data or perform actions related to saving the reminder
+        }
+    }
+
     
     private func showEditReminderView(for reminder: Reminder) {
         if let index = reminders.firstIndex(where: { $0.id == reminder.id }) {
