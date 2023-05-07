@@ -23,7 +23,8 @@ struct RemindersView: View {
     @State private var showEditReminder = false
     @State private var editReminderIndex = 0
     @State private var showAddReminder = false
-    
+    @State private var isEditingTitle = false
+
     private var titleTextColor: Color {
         return colorScheme == .light ? .black : .white
     }
@@ -35,42 +36,41 @@ struct RemindersView: View {
                 List {
                     ForEach(reminders.indices, id: \.self) { index in
                         let reminder = reminders[index]
-                        HStack {
-                            if reminder.isEditable {
-                                TextField("Reminder", text: $reminders[index].title)
-                                    .font(.headline)
-                                    .foregroundColor(titleTextColor)
-                                    .onSubmit {
-                                        // Save the updated title when editing is complete
-                                        reminders[index].isEditable = false
-                                        saveReminder(reminders[index])
-                                    }
-                            } else {
-                                VStack(alignment: .leading) {
+                        VStack(alignment: .leading) { // Wrap the content in a VStack
+                            HStack {
+                                if reminder.isEditable {
+                                    TextField("Reminder", text: $reminders[index].title)
+                                        .font(.headline)
+                                        .foregroundColor(titleTextColor)
+                                        .onSubmit {
+                                            // Save the updated title when editing is complete
+                                            reminders[index].isEditable = false
+                                            saveReminder(reminders[index])
+                                        }
+                                } else {
                                     Text(reminder.title)
                                         .font(.headline)
                                         .foregroundColor(titleTextColor)
-                                    if let date = reminder.date {
-                                        Text(formatDate(date))
-                                            .font(.subheadline)
-                                            .foregroundColor(.secondary)
+                                        .onTapGesture {
+                                            // Enable editing when the title is tapped
+                                            reminders[index].isEditable = true
+                                        }
+                                }
+                                
+                                Spacer()
+                                
+                                Image(systemName: "info.circle")
+                                    .foregroundColor(.blue)
+                                    .onTapGesture {
+                                        showEditReminderView(for: reminder)
                                     }
-                                }
-                                .onTapGesture {
-                                    // Enable editing when the title is tapped
-                                    reminders[index].isEditable = true
-                                }
                             }
                             
-                            Spacer()
-                            
-                            Image(systemName: "info.circle")
-                                .foregroundColor(.blue)
-                                .onTapGesture {
-                                    showEditReminderView(for: reminder)
-                                }
+                            if let date = reminder.date { // Check if the date exists
+                                Text(formatDate(date)) // Display the formatted date
+                                    .foregroundColor(.secondary) // Adjust the color if needed
+                            }
                         }
-
                         .swipeActions {
                             Button(action: {
                                 deleteReminder(reminder)
@@ -80,6 +80,8 @@ struct RemindersView: View {
                             .tint(.red)
                         }
                     }
+
+
 
 
 
@@ -152,8 +154,17 @@ struct RemindersView: View {
         if let index = reminders.firstIndex(where: { $0.id == reminder.id }) {
             reminders[index] = reminder
             // Update any necessary data or perform actions related to saving the reminder
+            if let date = reminder.date {
+                NotificationManager.scheduleNotification(for: "\(reminder.title) - \(formatDate(date))", at: date, withIdentifier: reminder.id.uuidString)
+            }
+        }
+        isEditingTitle = false
+        reminders.indices.forEach { index in
+            reminders[index].isEditable = false
         }
     }
+
+
 
     
     private func showEditReminderView(for reminder: Reminder) {
