@@ -22,10 +22,32 @@ struct EditReminder: View {
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .padding()
             
-            DatePicker("Select Date", selection: Binding($editedDate)!, displayedComponents: [.date, .hourAndMinute])
-                .datePickerStyle(GraphicalDatePickerStyle())
-                .labelsHidden()
-                .padding()
+            if selectedDate != nil || reminder.date != nil {
+                let nonOptionalSelectedDate = Binding<Date>(
+                    get: {
+                        reminder.date ?? selectedDate ?? Date()
+                    },
+                    set: { newValue in
+                        if selectedDate != nil {
+                            selectedDate = newValue
+                        } else {
+                            reminder.date = newValue
+                        }
+                        editedDate = newValue // Update editedDate
+                    }
+                )
+                
+                DatePicker("Select Date", selection: nonOptionalSelectedDate, in: Date()..., displayedComponents: [.date, .hourAndMinute])
+                    .datePickerStyle(GraphicalDatePickerStyle())
+                    .labelsHidden()
+                    .padding()
+                    .onAppear {
+                        editedDate = reminder.date ?? selectedDate
+                    }
+            }
+
+
+
             
             Button(action: saveReminder) {
                 Text("Save")
@@ -34,13 +56,17 @@ struct EditReminder: View {
         }
         .onAppear {
             editedTitle = reminder.title
-            editedDate = selectedDate ?? Date()
+            editedDate = reminder.date ?? selectedDate
         }
+
     }
     
     private func saveReminder() {
         reminder.title = editedTitle
-        reminder.date = editedDate ?? Date()
+        
+        if let editedDate = editedDate {
+            reminder.date = editedDate
+        }
         
         isPresented = false // Dismiss the view
         

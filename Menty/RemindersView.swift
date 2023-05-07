@@ -142,8 +142,10 @@ struct RemindersView: View {
         
         reminders.append(reminder)
         newReminder = ""
+        selectedDate = nil // Reset the selected date after adding a reminder
         showDatePicker = false
     }
+
 
 
 
