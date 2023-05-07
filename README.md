@@ -1,4 +1,4 @@
-# MentySwift
+# Menty
 A type of reminder app that is now being written in Swift with Xcode
 
 
