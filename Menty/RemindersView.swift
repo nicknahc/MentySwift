@@ -106,16 +106,27 @@ struct RemindersView: View {
                     HStack {
                         Image(systemName: "calendar")
                             .foregroundColor(.blue)
-                        
+                            .frame(alignment: .trailing) // Set a fixed width and alignment
+                            .padding(.leading)
                         Text("Date")
                             .font(.headline)
                             .foregroundColor(titleTextColor)
                             .frame(width: 80, alignment: .leading)
                         
                         Toggle("", isOn: $showDatePicker)
+                            .padding(.trailing)
                     }
-                    .padding(.bottom, 16)
-                    .padding(.horizontal)
+                        
+                    if let date = selectedDate {
+                        HStack {
+                            Text(formatDate(date))
+                                .foregroundColor(.secondary)
+                            Spacer()
+                        }
+                        .padding(.horizontal)
+                        .padding(.top, 8) // Add a top padding for spacing
+                    }
+
 
                     if showDatePicker {
                         DatePicker("", selection: Binding<Date>(
@@ -128,7 +139,9 @@ struct RemindersView: View {
                             .datePickerStyle(GraphicalDatePickerStyle())
                             .labelsHidden()
                             .padding(.horizontal)
+                            .padding(.bottom) // Add a bottom padding for spacing
                     }
+
 
 
 

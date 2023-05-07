@@ -7,6 +7,7 @@ struct EditReminder: View {
     @State private var editedTitle: String
     @State private var editedDate: Date?
     @Binding var isPresented: Bool
+    @State private var isDateToggledOn: Bool // Added property to track the toggle state
     
     init(reminder: Binding<Reminder>, selectedDate: Binding<Date?>, isPresented: Binding<Bool>) {
         _reminder = reminder
@@ -14,6 +15,7 @@ struct EditReminder: View {
         _editedTitle = State(initialValue: reminder.wrappedValue.title)
         _editedDate = State(initialValue: reminder.wrappedValue.date)
         _isPresented = isPresented
+        _isDateToggledOn = State(initialValue: reminder.wrappedValue.date != nil) // Initialize the toggle state
     }
     
     var body: some View {
@@ -22,7 +24,10 @@ struct EditReminder: View {
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .padding()
             
-            if selectedDate != nil || reminder.date != nil {
+            Toggle("Date", isOn: $isDateToggledOn) // Add the Toggle control
+                .padding(.horizontal)
+            
+            if isDateToggledOn || reminder.date != nil { // Check the toggle state
                 let nonOptionalSelectedDate = Binding<Date>(
                     get: {
                         reminder.date ?? selectedDate ?? Date()
@@ -45,9 +50,6 @@ struct EditReminder: View {
                         editedDate = reminder.date ?? selectedDate
                     }
             }
-
-
-
             
             Button(action: saveReminder) {
                 Text("Save")
@@ -58,22 +60,31 @@ struct EditReminder: View {
             editedTitle = reminder.title
             editedDate = reminder.date ?? selectedDate
         }
-
     }
     
     private func saveReminder() {
         reminder.title = editedTitle
         
-        if let editedDate = editedDate {
-            reminder.date = editedDate
+        if isDateToggledOn { // Check the toggle state
+            if let editedDate = editedDate {
+                reminder.date = editedDate
+            } else {
+                // Set a default date value
+                let defaultDate = Date().addingTimeInterval(3600) // Default date: 1 hour from the current time
+                reminder.date = defaultDate
+                editedDate = defaultDate
+            }
+        } else {
+            reminder.date = nil // Date was toggled off, so set it to nil
+            NotificationManager.cancelNotification(withIdentifier: reminder.id.uuidString) // Cancel the existing notification
         }
         
         isPresented = false // Dismiss the view
         
-        let unwrappedDate = reminder.date ?? Date()
-        let notificationTitle = "\(reminder.title) - \(formatDate(unwrappedDate))"
-        NotificationManager.cancelNotification(withIdentifier: reminder.id.uuidString)
-        NotificationManager.scheduleNotification(for: notificationTitle, at: unwrappedDate, withIdentifier: reminder.id.uuidString)
+        if let unwrappedDate = reminder.date {
+            let notificationTitle = "\(reminder.title) - \(formatDate(unwrappedDate))"
+            NotificationManager.scheduleNotification(for: notificationTitle, at: unwrappedDate, withIdentifier: reminder.id.uuidString)
+        }
     }
 
     
