@@ -46,13 +46,20 @@ struct RemindersView: View {
                                         saveReminder(reminders[index])
                                     }
                             } else {
-                                Text(reminder.title)
-                                    .font(.headline)
-                                    .foregroundColor(titleTextColor)
-                                    .onTapGesture {
-                                        // Enable editing when the title is tapped
-                                        reminders[index].isEditable = true
+                                VStack(alignment: .leading) {
+                                    Text(reminder.title)
+                                        .font(.headline)
+                                        .foregroundColor(titleTextColor)
+                                    if let date = reminder.date {
+                                        Text(formatDate(date))
+                                            .font(.subheadline)
+                                            .foregroundColor(.secondary)
                                     }
+                                }
+                                .onTapGesture {
+                                    // Enable editing when the title is tapped
+                                    reminders[index].isEditable = true
+                                }
                             }
                             
                             Spacer()
@@ -63,6 +70,7 @@ struct RemindersView: View {
                                     showEditReminderView(for: reminder)
                                 }
                         }
+
                         .swipeActions {
                             Button(action: {
                                 deleteReminder(reminder)
@@ -93,12 +101,14 @@ struct RemindersView: View {
                     }
                     .padding()
                     
-                    Button(action: {
-                        showDatePicker.toggle()
-                    }) {
-                        Text("Select Date")
+                    if !showDatePicker {
+                        Button(action: {
+                            showDatePicker.toggle()
+                        }) {
+                            Text("Select Date")
+                        }
+                        .padding(.bottom, 16)
                     }
-                    .padding(.bottom, 16)
                     
                     if showDatePicker {
                         DatePicker("Select Date", selection: Binding<Date>(
@@ -111,12 +121,9 @@ struct RemindersView: View {
                             .datePickerStyle(GraphicalDatePickerStyle())
                             .labelsHidden()
                             .padding()
-
-
                     }
-
-
                 }
+
                 
                 Button(action: {
                     showAddReminder.toggle()
