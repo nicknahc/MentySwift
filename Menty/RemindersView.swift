@@ -103,17 +103,22 @@ struct RemindersView: View {
                     }
                     .padding()
                     
-                    if !showDatePicker {
-                        Button(action: {
-                            showDatePicker.toggle()
-                        }) {
-                            Text("Select Date")
-                        }
-                        .padding(.bottom, 16)
+                    HStack {
+                        Image(systemName: "calendar")
+                            .foregroundColor(.blue)
+                        
+                        Text("Date")
+                            .font(.headline)
+                            .foregroundColor(titleTextColor)
+                            .frame(width: 80, alignment: .leading)
+                        
+                        Toggle("", isOn: $showDatePicker)
                     }
-                    
+                    .padding(.bottom, 16)
+                    .padding(.horizontal)
+
                     if showDatePicker {
-                        DatePicker("Select Date", selection: Binding<Date>(
+                        DatePicker("", selection: Binding<Date>(
                             get: {
                                 selectedDate ?? Date()
                             },
@@ -122,8 +127,13 @@ struct RemindersView: View {
                             }), displayedComponents: [.date, .hourAndMinute])
                             .datePickerStyle(GraphicalDatePickerStyle())
                             .labelsHidden()
-                            .padding()
+                            .padding(.horizontal)
                     }
+
+
+
+
+
                 }
 
                 
