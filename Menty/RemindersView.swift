@@ -3,9 +3,9 @@ import SwiftUI
 struct Reminder: Identifiable {
     let id = UUID()
     var title: String
-    var date: Date // New property to store the date
+    var date: Date? // New property to store the date
     
-    init(title: String, date: Date) {
+    init(title: String, date: Date?) {
         self.title = title
         self.date = date
     }
@@ -15,7 +15,7 @@ struct RemindersView: View {
     @Environment(\.colorScheme) var colorScheme
     @State private var reminders: [Reminder] = []
     @State private var newReminder: String = ""
-    @State private var selectedDate = Date()
+    @State private var selectedDate: Date?
     @State private var showDatePicker = false
     @State private var showEditReminder = false
     @State private var editReminderIndex = 0
@@ -36,13 +36,18 @@ struct RemindersView: View {
                                 .font(.headline)
                                 .foregroundColor(titleTextColor)
                             
-                            Text(formatDate(reminder.date))
-                                .font(.subheadline)
-                                .foregroundColor(.blue)
+                            if let date = reminder.date {
+                                Text(formatDate(date))
+                                    .font(.subheadline)
+                                    .foregroundColor(.blue)
+                            } else {
+                                EmptyView() // Hide the text when no date is selected
+                            }
+
                         }
                         .onTapGesture {
-                                    showEditReminderView(for: reminder)
-                                }
+                            showEditReminderView(for: reminder)
+                        }
                         .swipeActions {
                             Button(action: {
                                 deleteReminder(reminder)
@@ -52,6 +57,7 @@ struct RemindersView: View {
                             .tint(.red)
                         }
                     }
+
                 }
 
 
@@ -78,11 +84,21 @@ struct RemindersView: View {
                     .padding(.bottom, 16)
                     
                     if showDatePicker {
-                        DatePicker("Select Date", selection: $selectedDate, displayedComponents: [.date, .hourAndMinute])
+                        DatePicker("Select Date", selection: Binding<Date>(
+                            get: {
+                                selectedDate ?? Date()
+                            },
+                            set: {
+                                selectedDate = $0
+                            }), displayedComponents: [.date, .hourAndMinute])
                             .datePickerStyle(GraphicalDatePickerStyle())
                             .labelsHidden()
                             .padding()
+
+
                     }
+
+
                 }
                 
                 Button(action: {
@@ -97,7 +113,14 @@ struct RemindersView: View {
         }
         .colorScheme(.dark)
         .sheet(isPresented: $showEditReminder) {
-            EditReminder(reminder: $reminders[editReminderIndex], selectedDate: $selectedDate, isPresented: $showEditReminder)
+            EditReminder(reminder: $reminders[editReminderIndex], selectedDate: Binding<Date?>(
+                get: { selectedDate },
+                set: { date in
+                    if let date = date {
+                        selectedDate = date
+                    }
+                }
+            ), isPresented: $showEditReminder)
         }
     }
     
@@ -112,12 +135,22 @@ struct RemindersView: View {
         guard !newReminder.isEmpty else { return }
         
         let reminder = Reminder(title: newReminder, date: selectedDate)
+        
+        if let date = selectedDate {
+            NotificationManager.scheduleNotification(for: "\(reminder.title) - \(formatDate(date))", at: date, withIdentifier: reminder.id.uuidString)
+        }
+        
         reminders.append(reminder)
         newReminder = ""
         showDatePicker = false
-        
-        NotificationManager.scheduleNotification(for: "\(reminder.title) - \(formatDate(reminder.date))", at: selectedDate, withIdentifier: reminder.id.uuidString)
     }
+
+
+
+
+
+
+
 
     private func deleteReminder(_ reminder: Reminder) {
         if let index = reminders.firstIndex(where: { $0.id == reminder.id }) {
@@ -126,15 +159,15 @@ struct RemindersView: View {
             reminders.remove(at: index)
         }
     }
-
-
-
-
     
-    private func formatDate(_ date: Date) -> String {
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateStyle = .medium
-            dateFormatter.timeStyle = .short
-            return dateFormatter.string(from: date)
+    private func formatDate(_ date: Date?) -> String {
+        guard let date = date else {
+            return "No Date"
         }
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .medium
+        dateFormatter.timeStyle = .short
+        return dateFormatter.string(from: date)
+    }
     }
